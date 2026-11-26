@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#171923">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>DayFlow</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app" id="app">
+
+  <!-- HEADER -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-icon">✓</div>
+      <div class="brand-text">
+        <h1>DayFlow</h1>
+        <p data-i18n="tagline">نظم أسبوعك</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="points-pill" id="pointsPill" title="نقاطك">
+        <span>⭐</span>
+        <span id="pointsValue">0</span>
+      </div>
+      <button class="icon-button" id="themeToggle" aria-label="theme">
+        <svg id="themeIconSvg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+    <!-- ========== HOME ========== -->
+    <section class="page active" id="homePage">
+      <div class="greeting">
+        <p class="date" id="todayDate"></p>
+        <h2 class="greeting-title" id="greetingText"></h2>
+        <p class="greeting-sub" data-i18n="greetingSub">ابدأ يومك بخطوة صغيرة.</p>
+      </div>
+
+      <!-- Progress Frame -->
+      <section class="progress-frame">
+        <div class="progress-circle" id="progressCircle">
+          <div class="progress-circle-inner">
+            <span class="progress-percent" id="circlePercent">0%</span>
+            <span class="progress-label" data-i18n="todayProgress">إنجاز اليوم</span>
+          </div>
+        </div>
+        <p class="progress-count" id="dailyTaskCount">0 / 0</p>
+        <p class="progress-message" id="progressMessage"></p>
+      </section>
+
+      <!-- Week Strip -->
+      <section>
+        <div class="section-head">
+          <h3 data-i18n="thisWeek">هذا الأسبوع</h3>
+          <button class="text-btn" data-page="weekPage" data-i18n="viewWeek">عرض الأسبوع</button>
+        </div>
+        <div class="week-strip" id="weekStrip"></div>
+      </section>
+
+      <!-- Tasks Section -->
+      <section class="tasks-section">
+        <div class="section-head">
+          <div>
+            <h3 data-i18n="todayTasks">مهام اليوم</h3>
+            <p class="small muted" id="remainingText"></p>
+          </div>
+          <button class="add-btn" id="addTaskBtn" aria-label="add">+</button>
+        </div>
+        
+        <div id="tasksContainer"></div>
+        
+        <!-- Completed Tasks Section -->
+        <div id="completedSection" class="completed-section" hidden>
+          <button class="completed-toggle" id="completedToggle">
+            <span data-i18n="completedTasks">المهام المنجزة</span>
+            <span id="completedCountLabel">(0)</span>
+            <span class="chevron">▼</span>
+          </button>
+          <div id="completedContainer" class="completed-list" hidden></div>
+        </div>
+
+        <div class="empty-state" id="emptyState" hidden>
+          <div class="empty-icon">＋</div>
+          <h3 data-i18n="emptyTitle">يومك لسه فاضي</h3>
+          <p data-i18n="emptySub">أضف مهامك وخلّي DayFlow ينظم أسبوعك.</p>
+          <button class="primary-btn" id="emptyAddBtn" data-i18n="addFirstTask">إضافة أول مهمة</button>
+        </div>
+      </section>
+    </section>
+
+    <!-- ========== WEEK ========== -->
+    <section class="page" id="weekPage">
+      <div class="page-head">
+        <p class="eyebrow">SCHEDULE</p>
+        <h2 data-i18n="weeklyPlan">خطتك الأسبوعية</h2>
+        <p class="muted small" data-i18n="weeklyPlanSub">مهامك موزعة على أيام الأسبوع.</p>
+      </div>
+      <p class="week-overview" id="weekOverview"></p>
+      <div class="week-schedule" id="weekSchedule"></div>
+      <button class="primary-btn full-width" id="redistributeBtn" data-i18n="redistribute">إعادة توزيع المهام</button>
+    </section>
+
+    <!-- ========== STATS ========== -->
+    <section class="page" id="statsPage">
+      <div class="page-head">
+        <p class="eyebrow">PROGRESS</p>
+        <h2 data-i18n="myAchievements">إنجازاتي</h2>
+        <p class="muted small" data-i18n="myAchievementsSub">تابع تقدمك بمرور الوقت.</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-icon">🔥</span>
+          <strong id="streakCount">0</strong>
+          <p data-i18n="streak">أيام الالتزام</p>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">✓</span>
+          <strong id="completedCount">0</strong>
+          <p data-i18n="tasksDone">مهام مكتملة</p>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">%</span>
+          <strong id="weeklyRate">0%</strong>
+          <p data-i18n="weekRate">إنجاز الأسبوع</p>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">◷</span>
+          <strong id="completedHours">0</strong>
+          <p data-i18n="hoursDone">ساعات الإنجاز</p>
+        </div>
+      </div>
+
+      <div class="locked-card" id="detailedStatsLock">
+        <h4 data-i18n="detailedStatsTitle">تفاصيل الأسبوع</h4>
+        <p class="muted small" data-i18n="detailedStatsDesc">افتح التفاصيل الكاملة (5 نقاط)</p>
+        <button class="primary-btn" id="unlockStatsBtn" data-i18n="unlock">فتح</button>
+      </div>
+      <div class="locked-card" id="suggestionsLock">
+        <h4 data-i18n="suggestionsTitle">اقتراحات لتنظيم جدولك</h4>
+        <p class="muted small" data-i18n="suggestionsDesc">افتح الاقتراحات (10 نقاط)</p>
+        <button class="primary-btn" id="unlockSuggestionsBtn" data-i18n="unlock">فتح</button>
+      </div>
+
+      <div class="detailed-stats" id="detailedStats" hidden></div>
+      <div class="suggestions-list" id="suggestionsList" hidden></div>
+    </section>
+
+    <!-- ========== SETTINGS ========== -->
+    <section class="page" id="settingsPage">
+      <div class="page-head">
+        <p class="eyebrow">PERSONALIZE</p>
+        <h2 data-i18n="settingsTitle">الإعدادات</h2>
+        <p class="muted small" data-i18n="settingsSub">خصص التطبيق حسب تفضيلاتك.</p>
+      </div>
+
+      <div class="settings-group">
+        <div class="setting-item">
+          <div>
+            <h4 data-i18n="language">اللغة</h4>
+            <p data-i18n="languageSub">اختر لغة التطبيق.</p>
+          </div>
+          <select id="languageSelect">
+            <option value="ar">العربية</option>
+            <option value="en">English</option>
+            <option value="de">Deutsch</option>
+            <option value="es">Español</option>
+            <option value="la">Latina</option>
+          </select>
+        </div>
+
+        <div class="setting-item">
+          <div>
+            <h4 data-i18n="theme">المظهر</h4>
+            <p data-i18n="themeSub">اختر الألوان المناسبة.</p>
+          </div>
+          <select id="themeSelect">
+            <option value="dark" data-i18n="themeDark">داكن</option>
+            <option value="vanilla" data-i18n="themeVanilla">فانيلا شوكولاتة</option>
+            <option value="lightblue" data-i18n="themeLightBlue">أزرق فاتح</option>
+            <option value="custom" data-i18n="themeCustom">مخصص</option>
+          </select>
+        </div>
+
+        <div class="setting-item" id="customColorItem" hidden>
+          <div>
+            <h4 data-i18n="customColor">لون مخصص</h4>
+            <p data-i18n="customColorSub">اختر لونك المفضل.</p>
+          </div>
+          <input type="color" id="customColorInput" value="#2D7DD2">
+        </div>
+
+        <div class="setting-item">
+          <div>
+            <h4 data-i18n="notifTime">موعد التذكير اليومي</h4>
+            <p data-i18n="notifTimeSub">متى تذكيرك بمهام اليوم.</p>
+          </div>
+          <input type="time" id="notificationTime" value="07:00">
+        </div>
+
+        <div class="setting-item">
+          <div>
+            <h4 data-i18n="notifications">الإشعارات</h4>
+            <p data-i18n="notificationsSub">تذكير بمهام اليوم.</p>
+          </div>
+          <input type="checkbox" id="notificationsEnabled">
+        </div>
+      </div>
+
+      <div class="settings-group about">
+        <h4>DayFlow</h4>
+        <p data-i18n="aboutText">مساعدك الشخصي لتنظيم الأسبوع.</p>
+        <p class="small">v 1.1</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-page="homePage">
+      <span>⌂</span><small data-i18n="home">الرئيسية</small>
+    </button>
+    <button class="nav-item" data-page="weekPage">
+      <span>▦</span><small data-i18n="week">الأسبوع</small>
+    </button>
+    <button class="nav-item" data-page="statsPage">
+      <span>▥</span><small data-i18n="stats">إنجازاتي</small>
+    </button>
+    <button class="nav-item" data-page="settingsPage">
+      <span>⚙</span><small data-i18n="settings">الإعدادات</small>
+    </button>
+  </nav>
+
+  <!-- TASK MODAL -->
+  <div class="modal-overlay" id="taskModal" hidden>
+    <div class="modal">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow">TASK</p>
+          <h2 id="taskModalTitle" data-i18n="newTask">مهمة جديدة</h2>
+        </div>
+        <button class="close-btn" id="closeTaskModal">×</button>
+      </div>
+      <form id="taskForm">
+        <label data-i18n="taskName">اسم المهمة</label>
+        <input type="text" id="taskName" maxlength="100" required>
+
+        <label data-i18n="taskDuration">المدة (بالساعات)</label>
+        <input type="number" id="taskDuration" min="0.25" max="24" step="0.25" required>
+
+        <label data-i18n="taskPriority">الأولوية</label>
+        <select id="taskPriority">
+          <option value="primary" data-i18n="primary">أساسية</option>
+          <option value="secondary" data-i18n="secondary">ثانوية</option>
+        </select>
+
+        <label data-i18n="scheduleMode">طريقة الجدولة</label>
+        <select id="scheduleMode">
+          <option value="automatic" data-i18n="autoDistribute">توزيع تلقائي</option>
+          <option value="specific" data-i18n="specificDay">تحديد يوم معين</option>
+        </select>
+
+        <div id="specificDayWrap" hidden>
+          <label data-i18n="selectDay">اختر اليوم</label>
+          <select id="specificDay"></select>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="secondary-btn" id="cancelTask" data-i18n="cancel">إلغاء</button>
+          <button type="submit" class="primary-btn" data-i18n="save">حفظ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TASK OPTIONS SHEET -->
+  <div class="sheet-overlay" id="taskOptions" hidden>
+    <div class="sheet">
+      <button class="sheet-option" id="sheetEdit" data-i18n="edit">تعديل</button>
+      <button class="sheet-option danger" id="sheetDelete" data-i18n="delete">حذف</button>
+      <button class="sheet-option" id="sheetCancel" data-i18n="cancel">إلغاء</button>
+    </div>
+  </div>
+
+  <!-- CONFIRM DIALOG -->
+  <div class="modal-overlay" id="confirmDialog" hidden>
+    <div class="modal small-modal">
+      <h3 id="confirmTitle">تأكيد</h3>
+      <p id="confirmMessage"></p>
+      <div class="modal-actions">
+        <button class="secondary-btn" id="confirmCancel" data-i18n="cancel">إلغاء</button>
+        <button class="primary-btn" id="confirmOk" data-i18n="confirm">تأكيد</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
