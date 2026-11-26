@@ -19,7 +19,11 @@ jobs:
         run: |
           npm init -y
           npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor/local-notifications
-          npx cap init DayFlow com.dayflow.app --web-dir=.
+          mkdir www
+          cp index.html www/
+          cp style.css www/
+          cp app.js www/
+          npx cap init DayFlow com.dayflow.app --web-dir=www
           
       - name: Add Android Platform
         run: npx cap add android
